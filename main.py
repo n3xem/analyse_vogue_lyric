@@ -1,4 +1,7 @@
 import requests
+import re
+import time
+from bs4 import BeautifulSoup
 import json
 
 def downloadSongTitle():
@@ -17,8 +20,20 @@ def downloadSongTitle():
 def downloadLyric(lyricTitle):
   lyricSearchUrl = "https://www.uta-net.com/search/?Aselect=2&Bselect=3&Keyword={0}&sort=6".format(lyricTitle)
   response = requests.get(lyricSearchUrl)
-  print(response.text)
+
+  time.sleep(2)
+  soup = BeautifulSoup(response.text, "html.parser")
+  lyricUrlComp = soup.select("tbody:first-of-type tr:first-of-type td:first-of-type a")
+  if lyricUrlComp == []:
+    return "none"
+  lyricUrl = "https://www.uta-net.com" + lyricUrlComp[0].attrs['href']  
+  response = requests.get(lyricUrl)
+  soup = BeautifulSoup(response.text, 'html.parser')
+  lyricHtml = str(soup.find("div", id="kashi_area"))
+  lyric = re.sub('<.+?>', ' ', lyricHtml)
+  return lyric
 
 musicTitleList = downloadSongTitle()
-downloadLyric(musicTitleList[0])
-
+for lyric in musicTitleList:
+  print(lyric)
+  print(downloadLyric(lyric))
