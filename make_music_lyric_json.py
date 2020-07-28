@@ -2,7 +2,6 @@ import requests
 import re
 import time
 from bs4 import BeautifulSoup
-from janome.tokenizer import Tokenizer
 import json
 
 
@@ -20,7 +19,13 @@ def download_lyric(lyricTitle):
     response = requests.get(lyricUrl)
     soup = BeautifulSoup(response.text, 'html.parser')
     lyricHtml = str(soup.find("div", id="kashi_area"))
-    lyric = re.sub('<.+?>', ' ', lyricHtml)
+    lyric = re.sub('<.+?>', '。', lyricHtml)
+    lyric = lyric[1:]
+
+    lyric = re.sub('！。', '！', lyric)
+    lyric = re.sub('!。', '!', lyric)
+    lyric = re.sub('。{2,}', '。', lyric)
+
     return lyric
 
 
