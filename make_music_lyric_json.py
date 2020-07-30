@@ -6,6 +6,18 @@ import json
 
 
 def download_lyric(lyricTitle):
+    """lyricTitle(歌のタイトル)の歌詞を返す
+
+    Parameters
+    ----------
+    lyricTitle : string
+        歌のタイトル
+
+    Returns
+    ----------
+    string
+        歌の歌詞
+    """
     lyricSearchUrl = "https://www.uta-net.com/search/?Aselect=2&Bselect=4&Keyword={0}&sort=4".format(
         lyricTitle)
     response = requests.get(lyricSearchUrl)
@@ -30,6 +42,18 @@ def download_lyric(lyricTitle):
 
 
 def create_music_dic(orig_dic):
+    """Apple Musicから取得したJsonを辞書型に直したものを渡すと、必要な情報だけ抜き出した辞書型に加工してくれる関数
+
+    Parameters
+    ----------
+    orig_dic : dictionary
+        Apple Musicから取得したJsonを辞書型に直したもの
+
+    Returns
+    ----------
+    dictionary
+        加工した辞書
+    """
     music_title = orig_dic["name"]
     artist_name = orig_dic["artistName"]
     genre = orig_dic["genres"][0]["name"]
